@@ -26,6 +26,24 @@ import { songsData } from "../assets/assets";
         audioRef.current.pause()
         setPlayStatus(false)
     }
+    const playWithId = async(id)=>{
+        await setTrack(songsData[id])
+        await audioRef.current.play()
+         setPlayStatus(true)   
+
+    }
+    const previous = async()=>{
+        if(track.id >0)
+        await setTrack(songsData[songsData.length-1])
+        await audioRef.current.play()
+         setPlayStatus(true)
+    }
+    const next = async()=>{
+        if(track.id <songsData.length-1)
+        await setTrack(songsData[track.id+1])
+    await audioRef.current.play()
+     setPlayStatus(true)
+    }
     useEffect(()=>
     {
         audioRef.current.ontimeupdate=()=>{
@@ -43,8 +61,12 @@ import { songsData } from "../assets/assets";
             })
         }
     })
+    const seekSong =async(e)=>{
+  //console.log(e)
+  audioRef.current.currentTime = ((e.nativeEvent.offsetX /seekBg.current.offsetWidth)*audioRef.current.duration)
+    }
     const contextValue={
-     audioRef,seekBar,seekBg,track,setTrack,playStatus,setPlayStatus,time,setTime,play,pause
+     audioRef,seekBar,seekBg,track,setTrack,playStatus,setPlayStatus,time,setTime,play,pause,playWithId,next,previous,seekSong
     }
     return(
         <PlayerContext.Provider value = {contextValue}>
